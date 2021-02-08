@@ -33,8 +33,12 @@ navigation:
     url: https://ucdavis-bioinformatics-training.github.io/2021-March-Introduction-to-R-for-Bioinformatics/
 
   - heading: Data Reduction
+  - title: MCA
+  - url: data_reduction/MCA
 
   - heading: Data Analysis
+  - title: MCA
+  - url: data_reduction/MCA
 
   - heading: ETC
   - title: Closing thoughts
