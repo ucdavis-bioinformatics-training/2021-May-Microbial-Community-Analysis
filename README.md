@@ -4,7 +4,7 @@ All documentation for the workshop is best viewed from the github.io pages
 
 Microbial Community Analysis
 
-Aug. 12, 2020 - Aug. 14, 2020, 9 a.m. - 4:30 p.m daily. **Online learning**
+May 17, 2021 - May 19, 2021, 9 a.m. - 4:30 p.m daily. **Online learning**
 
 Contact - UC Davis Bioinformatics Core, [training.bioinformatics@ucdavis.edu](mailto:training.bioinformatics@ucdavis.edu)
 
