@@ -10,7 +10,7 @@ Contact - UC Davis Bioinformatics Core, [training.bioinformatics@ucdavis.edu](ma
 
 With high-throughput sequencing (HTS) of entire microbial communities we are rapidly advancing our understanding of the composition and functional content of microbial communities involved in climate change, environmental pollution, human health, biotechnology, etc. Using these data we are able to achieve the most complete picture of the taxonomic (i.e., what organisms are there) and functional (i.e., what are those organisms are doing) composition of microbial communities, making it possible to perform investigations that include organisms that were previously intractable with culturing-based methods. With HTS all organisms contained in an environmental sample are sequenced in a culture-independent manner, using either amplicon based methods to investigate the taxonomic content or whole-genome/transcriptome shotgun-based methods to investigate both the taxonomic and functional content of the sampled community. This workshop will cover - the amplicon-based molecular laboratory techniques used to assay microbial communities (lecture only) - the bioinformatics methodologies for analysis using command-line tasks and applications (hands-on) Metagenomics and metatranscriptomics will be briefly covered in a lecture. Not all topics regarding microbial community analysis will be covered nor all potential software resources (Qiime or Mothur will not be covered) as there are just too many.
 
-A basic understanding of the command line and R is a prerequisite for success in this course. We recommend beginners enroll in our introductory courses in CLI and R. After a brief review on the first day of the course,  we will not be providing instruction in basic CLI or R.
+To get the most out of this course, please complete the prerequisite material in [command line](base/cli_prerequisites) and [R](base/r_prerequisites) before the course, and contact us with any questions.
 
 This workshop will be held online from 9:00 am to 5:00 pm each day.
 
@@ -20,7 +20,7 @@ Participants must have access to a computer with a reliable connection to the in
 
 **Who should attend?** … Prior course participants have included faculty, post docs, grad students, staff, and industry researchers.
 
-**What are the prerequisites?** … A basic understanding of the command line and R is a prerequisite for success in this course. We recommend beginners enroll in our introductory courses in CLI and R. After a brief review on the first day of the course,  we will not be providing instruction in basic CLI or R.
+**What are the prerequisites?** … To get the most out of this course, please complete the prerequisite material in [command line](base/cli_prerequisites) and [R](base/r_prerequisites) before the course, and contact us with any questions.
 
 **What do I need to bring?** … You will need access to a computer with a reliable connection to the internet, current versions of [R version 4.0](https://cloud.r-project.org/) and [Rstudio](https://rstudio.com/products/rstudio/download/#download) installed, and an application that allows them to ssh into a server (e.g. Bash for Windows, or Terminal for Apple). If your department does not allow you to install software on your computer, please contact us ahead of time.
 
