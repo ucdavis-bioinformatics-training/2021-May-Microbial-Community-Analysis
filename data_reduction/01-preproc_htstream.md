@@ -395,7 +395,7 @@ We can now run the preprocessing routine across all samples on the real data usi
 
 ```bash
 cd /share/workshop/mca_workshop/$USER/  # We'll run this from the main directory
-wget https://ucdavis-bioinformatics-training.github.io/2020-mca_workshop/software_scripts/scripts/hts_preproc.slurm -O hts_preproc.slurm
+wget https://raw.githubusercontent.com/ucdavis-bioinformatics-training/2021-May-Microbial-Community-Analysis/master/software_scripts/scripts/hts_preproc.slurm -O hts_preproc.slurm
 less hts_preproc.slurm
 ```
 
