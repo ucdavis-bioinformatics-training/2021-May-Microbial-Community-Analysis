@@ -5,7 +5,7 @@ __The mission of the Bioinformatics Core facility is to facilitate outstanding o
  <img src="https://raw.githubusercontent.com/ucdavis-bioinformatics-training/ucdavis-bioinformatics-training.presentations/master/misc/welcome_figure1.png" alt="welcome_figure1" width="800px"/>
 
 ## Staff and Students
-Our team offers custom bioinformatics services to academic and private organizations. We have a strong academic background with a focus on cutting edge, open source software. We replicate standard analysis pipelines (best practices) when appropriate, and/or develop novel applications and pipelines when needed, however we always emphasize biological interpretation of the data.
+Our team offers custom bioinformatics services to academic and private organizations. We have a strong academic and collaborative background with a focus on cutting edge, open source software. We replicate standard analysis pipelines (best practices) when appropriate, and/or develop novel applications and pipelines when needed, however we always emphasize biological interpretation of the data.
 
 
  <img src="https://raw.githubusercontent.com/ucdavis-bioinformatics-training/ucdavis-bioinformatics-training.presentations/master/misc/staff.png" alt="staff" width="800px"/>
@@ -26,16 +26,16 @@ Our team offers custom bioinformatics services to academic and private organizat
 
 ## Structure of the Virtual Workshops
 
-Given the current Covid19 pandemic, and stay in place orders around the world, we've decided to take our popular bioinformatic workshops virtual. Our intent is to offer as close to an experience we can to our in-person workshops. We will hold the same goals and strive for a similar lecture/hand-on ratio. We will be using multiple technologies in order to help facilitate a maximum amount of interaction.
+Given the current Covid19 pandemic, and stay in place orders around the world, we've decided to take our popular bioinformatic workshops virtual in 2020. Our intent is to offer as close to an experience we can to our in-person workshops. We will hold the same goals and strive for a similar lecture/hand-on ratio. We will be using multiple technologies in order to help facilitate a maximum amount of interaction.
 
 #### Zoom
 
 Course lecture, discussions, and one-on-one help/troubleshooting will be conducted using a zoom meeting.
 
-  * Each participant will be provided a personal break out room that will allow one-on-one troubleshooting by our staff, screen sharing and even remote control.
+  * Participants will be placed in a group break out room during hands-on portions of the course. We hope to place individuals with a range of experience in each room.
   * The Chat features of Zoom will **not** be our primary mode of text communication as its history is not reliable.
-  * We will stick to a schedule to allow people to plan their day and know when they need to be back at their computers for lecture.
-  * Video recordings of lectures will be made available to participants.
+  * We will *try* and stick to a schedule to allow people to plan their day and know when they need to be back at their computers for lecture.
+  * Video recordings of lectures will be made available to the participants.
 
 Because video is involved, we ask everyone to be respectful and we reserve the right to remove someone if they are being disrespectful or disruptive.
 
@@ -49,13 +49,13 @@ Text based communication will be conducted via a Slack channel. Staff will be mo
 
 #### Patience
 
-We ask for a little more patience as this process is also new to us, but we are committed to providing you the best educational experience we can (under the current conditions).
+We ask for a little more patience as this process, but we are committed to providing you the best educational experience we can.
 
 ### Workshop Goals
 
-* End to End understanding of the basics of MCA experiments
+* End-to-End understanding of the basics of amplicon based experiments.
 
-* To work through a complete experiment, starting from raw data to completion, including making a few figures.
+* To work through a complete experiment, starting from raw data to completion, including making figures.
 
 * Goal is 30-40% lecture/discussion 60-70% hands-on
 
@@ -80,11 +80,6 @@ Workshop materials are all posted on github, and publicly available
 
 ### Computing Cluster
 
-A portion of  this course will be conducted on our servers and compute cluster (tadpole.genomecenter.ucdavis.edu).
+A portion of this course will be conducted on our servers and compute cluster. Instructions for getting (or resetting) an account would have been sent in a workshop email.
 
-Everyone should get an account.  
-[https://computing.genomecenter.ucdavis.edu](https://computing.genomecenter.ucdavis.edu)
-
-Request an account -> sponsor is "Bioinformatics Core Workshop"
-
-If you already have, or have had in the past, an account on our systems, then please tell us your username, or email, and we will add you to the workshop. **Do not create a new account**
+If you already have, or have had in the past, an account on our systems, then please tell us your username, or email, and we will add you to the workshop. **Do not create a new account.**

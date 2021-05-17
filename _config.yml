@@ -1,5 +1,5 @@
 theme: jekyll-theme-minimal
-title: 'Microbial Community Analysis'
+title: 'Microbial Community Analysis (amplicons)'
 show_downloads: True
 google_analytics: True
 navigation:
@@ -12,13 +12,13 @@ navigation:
   - title: Schedule
     url: base/schedule
   - title: What is Bioinformatics/Genomics?
-    url: https://raw.githubusercontent.com/ucdavis-bioinformatics-training/ucdavis-bioinformatics-training.presentations/master/genomics/Genomics_a_perspective_May_2020.pdf
+    url: https://raw.githubusercontent.com/ucdavis-bioinformatics-training/ucdavis-bioinformatics-training.presentations/master/genomics/Genomics_a_perspective_Oct_2020.pdf
 
   - heading: Support
-  - title: Slack
-    url: base/slack
   - title: Zoom
     url: base/zoom
+  - title: Slack
+    url: base/slack
   - title: Cheat Sheets
     url: base/cheatSheetIndex
   - title: Software and Links
@@ -29,12 +29,20 @@ navigation:
   - heading: Prerequisites
   - title: CLI
     url: base/cli_prerequisites
-  - title: R
+  - title: Introduction to R
+    url: base/Intro2R/Intro2R_main
+  - title: High Performance Computing
+    url: base/cluster
+
     url: base/r_prerequisites
 
   - heading: Data Reduction
-  - title: MCA
-  - url: data_reduction/MCA
+  - title: Filetype Description
+    url: data_reduction/filetypes
+  - title: MCA project setup
+    url: data_reduction/00-project_setup
+  - title: Preprocessing Reads
+    url: data_reduction/01-preproc_htstream
 
   - heading: Data Analysis
   - title: MCA
@@ -43,8 +51,6 @@ navigation:
   - heading: ETC
   - title: Closing thoughts
     url: base/closing
-  - title: Workshop Photos
-    url: photos/photos
   - title: Github page
     url: https://github.com/ucdavis-bioinformatics-training/2021-May-Microbial-Community-Analysis
   - title: Biocore website
