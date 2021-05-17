@@ -36,8 +36,6 @@ navigation:
   - title: High Performance Computing
     url: base/cluster
 
-    url: base/r_prerequisites
-
   - heading: Data Reduction
   - title: Filetype Description
     url: data_reduction/filetypes
