@@ -14,7 +14,7 @@ navigation:
   - title: What is Bioinformatics/Genomics?
     url: https://raw.githubusercontent.com/ucdavis-bioinformatics-training/ucdavis-bioinformatics-training.presentations/master/genomics/Genomics_a_perspective_Oct_2020.pdf
   - title: Generating Microbial Amplicons
-    url: https://raw.githubusercontent.com/ucdavis-bioinformatics-training/2021-May-Microbial-Community-Analysis/master/genomics/Generating_Amplicons.pdf
+    url: https://github.com/ucdavis-bioinformatics-training/2021-May-Microbial-Community-Analysis/blob/main/Generating_Amplicons.pdf
 
   - heading: Support
   - title: Zoom
