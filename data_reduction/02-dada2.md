@@ -222,11 +222,14 @@ Lets create a simple table that show us how our ASV table was generated and how 
 DADA2 re-implements the Ribosomal Data Projects Bayesian Classifier. This is a k-mer (15 mers) based algorithm, comparing a subset of each read's kmers to a database (of kmers). 100 bootstraps are performed (randome drawing of kmers) to establish confidence level (bootstrap score) in result. The approach classifies reads to the genus level and supplies a bootstrap score of confidence.
 
 For this you need a database of reference sequences. The developers [supply references](https://benjjneb.github.io/dada2/training.html) for
-    * silva
-    * rdp
-    * Unite
-    * GTDB
-    * and more ...
+
+
+* silva
+* rdp
+* Unite
+* GTDB
+* and more ...
+
 
 For this experiment, we are going to use the [SILVA database](https://zenodo.org/record/4587955#.YKKouZNKgq0)
 
@@ -277,6 +280,7 @@ How many sequences are assigned at each rank?
 
 To produce a phylogenetic tree we need to:
 
+
 * Extract sequences
 * Perform multiple sequence alignment
 * Convert to phyDat format
@@ -284,6 +288,7 @@ To produce a phylogenetic tree we need to:
 * Compute the neighbor-joining tree
 * Compute the likelihood of a tree given a sequence alignment and a model
 * update and optimize its parameters.
+
 
 
     library(DECIPHER); packageVersion("DECIPHER")
