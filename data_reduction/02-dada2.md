@@ -294,10 +294,14 @@ To produce a phylogenetic tree we need to:
     library(DECIPHER); packageVersion("DECIPHER")
     library(phangorn); packageVersion("phangorn")
 
+
     ASVs.nochim = DNAStringSet(colnames(seqtab.nochim))
     names(ASVs.nochim) = paste0("ASV", 1:ncol(seqtab.nochim))
 
+
 This can take a while, so we will reduce down to the top 1000 sequences only.
+
+
 
     alignment = AlignSeqs(ASVs.nochim[1:1000], anchor=NA, processors=30)
 
