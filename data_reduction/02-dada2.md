@@ -3,7 +3,7 @@
 Some of you should also launch an interactive session on the cluster before performing the below opperation.
 
 ```
-srun -t 12:00:00 -c 8 -n 1 --mem 4800 --partition production --account workshop --reservation workshop --pty /bin/bash
+srun -t 12:00:00 -c 8 -n 1 --mem 48000 --partition production --account workshop --reservation workshop --pty /bin/bash
 ```
 
 ```
