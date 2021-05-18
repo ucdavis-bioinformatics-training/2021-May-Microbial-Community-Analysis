@@ -110,7 +110,7 @@ We get right to denoising of our SE reads. DADA2 first generates an error model 
 **This can take a little bit, good time for a break**
 
 
-    derep <- derepFastq(FnSEs)
+    derep <- derepFastq(fnSEs)
     errU <- learnErrors(derep, multithread=TRUE, nreads=50000)
 
 
@@ -137,7 +137,7 @@ Then DADA2 denoises the dataset using the error model previously generated above
 This step can be run on individual samples, all samples pooled, or a pseudo-mix of the two pseudo. Running it on individual samples is the least computationally intensive, followed by pseudo and pool. Pooling the samples allow the algorithm to identify a lowly abundant sequence in 1 sample that is more abundant in another. So same low abuntant taxa in some samples could be filtered out when not pooling. For the sake of time we denoise samples individually.
 
 
-    dadaUs = dada(fnSEs, err=errU, multithread=TRUE)
+    dadaUs = dada(derep, err=errU, multithread=TRUE)
 
 * *What does this object "dataUs" look like? What is contained within it*
 
