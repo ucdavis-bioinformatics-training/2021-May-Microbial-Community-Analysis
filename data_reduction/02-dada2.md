@@ -139,6 +139,7 @@ This step can be run on individual samples, all samples pooled, or a pseudo-mix 
 
     dadaUs = dada(derep, err=errU, multithread=TRUE)
 
+
 * *What does this object "dataUs" look like? What is contained within it*
 
 ## Generate an ASV count table
@@ -216,7 +217,7 @@ Lets create a simple table that show us how our ASV table was generated and how 
 * *Which sample has the most/least ASVs"?*
 * *Do you see a relationship between sequence count and ASV?*
 
-### Assign taxonomy to the sequence data:
+## Assign taxonomy to the sequence data:
 
 DADA2 re-implements the Ribosomal Data Projects Bayesian Classifier. This is a k-mer (15 mers) based algorithm, comparing a subset of each read's kmers to a database (of kmers). 100 bootstraps are performed (randome drawing of kmers) to establish confidence level (bootstrap score) in result. The approach classifies reads to the genus level and supplies a bootstrap score of confidence.
 
