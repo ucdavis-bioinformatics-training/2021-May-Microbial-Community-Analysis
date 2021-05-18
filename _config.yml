@@ -43,6 +43,8 @@ navigation:
     url: data_reduction/00-project_setup
   - title: Preprocessing Reads
     url: data_reduction/01-preproc_htstream
+  - title: ASV production
+    url: data_reduction/02-dada2
 
   - heading: Data Analysis
   - title: MCA
