@@ -47,8 +47,8 @@ navigation:
     url: data_reduction/02-dada2
 
   - heading: Data Analysis
-  - title: MCA
-  - url: data_reduction/MCA
+  - title: Prepare Analysis
+  - url: data_analysis/prepare_phyloaseq
 
   - heading: ETC
   - title: Closing thoughts
