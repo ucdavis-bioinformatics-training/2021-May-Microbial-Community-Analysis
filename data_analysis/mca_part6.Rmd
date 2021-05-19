@@ -1,0 +1,134 @@
+---
+title: "2021 Microbial Community Analysis Workshop - Part6"
+author: "UC Davis Bioinformatics Core"
+output:
+    html_document:
+      keep_md: TRUE
+---
+
+# Differential Abundance and Ordination
+
+## Load our libraries
+
+```{r global_options}
+# Set up global options for nice reports and keeping figures:
+knitr::opts_chunk$set(fig.width=14, fig.height=8, fig.align="center",
+                      warning=FALSE, message=FALSE)
+```
+
+Lets start by loading libraries
+
+```{r libraries}
+library(phyloseq)
+library(phangorn)
+library(ggplot2)
+library(edgeR)
+
+nice_colors = c("#999999", "#E69F00", "#56B4E9","#e98756","#c08160","#5800e6", "#CDDC49", "#C475D3", 
+                "#E94B30", "#233F57", "#FEE659", "#A1CFDD", "#F4755E", "#D6F6F7","#EB6D58", "#6898BF")
+```
+
+## Load prior results
+
+```{r load_object}
+load(file=file.path("rdata_objects", "transformed_objects.RData"))
+```
+
+## Ordination
+
+```{r, eval=FALSE}
+#Can view the distance method options with
+?distanceMethodList
+
+# can veiw the oridinate methods with
+?ordinate
+```
+
+```{r fig.width=6, fig.height=8}
+v1.RLE.ord <- ordinate(ps.1logRLE, "MDS", "wunifrac")
+
+p1 = plot_ordination(ps.1logRLE, v1.RLE.ord, type="taxa", color="Phylum", title="taxa")
+p1
+p1 + facet_wrap(~Phylum, 5)
+
+p2 = plot_ordination(ps.1logRLE, v1.RLE.ord, type="samples", color="Temp", shape="Group")
+p2
+p2 + geom_line() + geom_point(size=5) + ggtitle("samples")
+p2
+
+p3 = plot_ordination(ps.1logRLE, v1.RLE.ord, type="biplot", color="Temp", shape="Group") +
+                     scale_shape_manual(values=1:7)
+```
+
+Now try doing oridination with other transformations, such as relative abundance, log. Also looks and see if you can find any trends in the variable Dist_from_edge.
+
+
+## Differential Abundances
+
+For differential abundances we can use RNAseq pipeline EdgeR and limma voom.
+
+```{r fig.width=6, fig.height=8}
+m = as(otu_table(ps.1), "matrix")
+# Define gene annotations (`genes`) as tax_table
+taxonomy = tax_table(ps.1, errorIfNULL=FALSE)
+if( !is.null(taxonomy) ){
+  taxonomy = data.frame(as(taxonomy, "matrix"))
+}
+# Now turn into a DGEList
+d = DGEList(counts=t(m), genes=taxonomy, remove.zeros = TRUE)
+
+## reapply filter
+prop  = transform_sample_counts(ps.1, function(x) x / sum(x) )
+keepTaxa <- ((apply(otu_table(prop) >= 0.005,2,sum,na.rm=TRUE) > 2) | (apply(otu_table(prop) >= 0.05, 2, sum,na.rm=TRUE) > 0))
+table(keepTaxa)
+d <- d[keepTaxa,]
+
+
+# Calculate the normalization factors
+z = calcNormFactors(d, method="RLE")
+# Check for division by zero inside `calcNormFactors`
+if( !all(is.finite(z$samples$norm.factors)) ){
+  stop("Something wrong with edgeR::calcNormFactors on this data,
+       non-finite $norm.factors, consider changing `method` argument")
+}
+
+plotMDS(z, col = as.numeric(factor(sample_data(ps.1)$Group)), labels = sample_names(ps.1), cex=0.5)
+```
+
+```{r}
+# Create a model based on Group and Temp
+mm <- model.matrix( ~ Group + Temp, data=data.frame(as(sample_data(ps.1),"matrix"))) # specify model with no intercept for easier contrasts
+y <- voom(d, mm, plot = T)
+
+fit <- lmFit(y, mm)
+head(coef(fit))
+
+# single contrast comparing Temp 5 - 20
+contr <- makeContrasts(GroupBs2 = "GroupBs2",
+                       levels = colnames(coef(fit)))
+tmp <- contrasts.fit(fit, contr)
+tmp <- eBayes(tmp)
+tmp2 <- topTable(tmp, coef=1, sort.by = "P", n = Inf)
+tmp2$Taxa <- rownames(tmp2)
+tmp2 <- tmp2[,c("Taxa","logFC","AveExpr","P.Value","adj.P.Val")]
+length(which(tmp2$adj.P.Val < 0.05)) # number of Differentially abundant taxa
+sigtab = cbind(as(tmp2, "data.frame"), as(tax_table(ps.1)[rownames(tmp2), ], "matrix"))
+head(sigtab)
+```
+
+
+
+# Cleanup
+
+Save object
+
+```{r save_object}
+dir.create("rdata_objects", showWarnings = FALSE)
+save(ps, file=file.path("rdata_objects", "final.Rdata"))
+```
+
+Record session information
+
+```{r session_info}
+sessionInfo()
+```
