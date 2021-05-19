@@ -17,7 +17,7 @@ if (!requireNamespace("BiocManager", quietly = TRUE))
 if (!any(rownames(installed.packages()) == "phyloseq")){
   BiocManager::install("phyloseq")
 }
-library(phyloseq); packageVersion(phyloseq)
+library(phyloseq); packageVersion("phyloseq")
 
 if (!any(rownames(installed.packages()) == "biomformat")){
   BiocManager::install("biomformat")
