@@ -48,21 +48,27 @@ if (!any(rownames(installed.packages()) == "dada2")){
   BiocManager::install("dada2")
 }
 library(dada2); packageVersion("dada2")
+
+if (!any(rownames(installed.packages()) == "phangorn")){
+  BiocManager::install("phangorn")
+}
+library(phangorn); packageVersion("phangorn")
+
 ```
 
-<!-- ### Download the template Markdown workshop document and open it
+### Download the template Markdown workshop document and open it
 
 In the R console run the following command
 
 ```r
-download.file("https://raw.githubusercontent.com/ucdavis-bioinformatics-training/2019_September_UCD_Microbial_Community_Analysis_Workshop/master/MCA_Workshop_R/phyloseq.Rmd", "MCA_phyloseq.Rmd")
+download.file("https://raw.githubusercontent.com/ucdavis-bioinformatics-training/2021-May-Microbial-Community-Analysis/master/data_analysis/mca-part1.Rmd", "mca-part1.Rmd")
 ```
 
 ### Download the data file for the workshop document and preview/open it
 
 
 ```r
-download.file("https://raw.githubusercontent.com/ucdavis-bioinformatics-training/2019_September_UCD_Microbial_Community_Analysis_Workshop/master/MCA_Workshop_R/16sV3V5.biom", "16sV3V5.biom")
+download.file("https://raw.githubusercontent.com/ucdavis-bioinformatics-training/2021-May-Microbial-Community-Analysis/master/data/phyloseq_nochim_silva.RData", "phyloseq_nochim_silva2.RData")
 ```
 
 ### Edit the file YAML portion
@@ -76,4 +82,3 @@ date: current_date
 output:
     html_notebook: default
     html_document: default
----</code></pre> -->
