@@ -59,6 +59,8 @@ navigation:
     url: data_analysis/mca_part4
   - title: MCA Part 5
     url: data_analysis/mca_part5
+  - title: MCA Part 6
+    url: data_analysis/mca_part6
 
   - heading: ETC
   - title: Closing thoughts
