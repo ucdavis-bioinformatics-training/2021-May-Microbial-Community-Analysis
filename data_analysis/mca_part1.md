@@ -205,10 +205,24 @@ plot_bar(ps, fill = "Phylum") + theme(legend.position="bottom" ) +  scale_fill_m
 <img src="mca_part1_files/figure-html/firstplot-1.png" style="display: block; margin: auto;" />
 
 
+# Cleanup
+
+Save object
+
+
+```r
+dir.create("rdata_objects", showWarnings = FALSE)
+save(ps, file=file.path("rdata_objects", "initial_rooted.Rdata"))
+```
+
+Get next Rmd
+
+
 ```r
 download.file("https://raw.githubusercontent.com/ucdavis-bioinformatics-training/2021-May-Microbial-Community-Analysis/master/data_analysis/mca-part2.Rmd", "mca-part2.Rmd")
 ```
 
+Record session information
 
 ```r
 sessionInfo()
