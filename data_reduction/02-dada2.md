@@ -301,8 +301,7 @@ First lets load the library.
     names(ASVs.nochim) = paste0("ASV", 1:ncol(seqtab.nochim))
 
 
-This can take a while, so we will reduce down to the top 1000 sequences only.
-
+This can take a while, so we will reduce down to the top 1000 sequences only. **For your dataset remove the `[1:1000]` indexing, or choose a more appropriate one**
 
 
     alignment = AlignSeqs(ASVs.nochim[1:1000], anchor=NA, processors=30)
