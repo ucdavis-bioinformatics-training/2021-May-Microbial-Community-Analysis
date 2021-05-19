@@ -58,6 +58,11 @@ if (!any(rownames(installed.packages()) == "tidyr")){
   BiocManager::install("tidyr")
 }
 library(tidyr); packageVersion("tidyr")
+
+if (!any(rownames(installed.packages()) == "kableExtra")){
+  BiocManager::install("kableExtra")
+}
+library(kableExtra); packageVersion("kableExtra")
 ```
 
 ### Download the template Markdown workshop document and open it
