@@ -49,6 +49,8 @@ navigation:
   - heading: Data Analysis
   - title: Prepare Analysis
     url: data_analysis/prepare_phyloseq
+  - title: MCA Part 1
+    url: data_analysis/mca-part1
 
   - heading: ETC
   - title: Closing thoughts
