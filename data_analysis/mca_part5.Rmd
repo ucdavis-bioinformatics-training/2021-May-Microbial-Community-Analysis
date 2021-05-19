@@ -1,0 +1,75 @@
+---
+title: "2021 Microbial Community Analysis Workshop - Part5"
+author: "UC Davis Bioinformatics Core"
+output:
+    html_document:
+      keep_md: TRUE
+---
+
+# Some Graphical Summaries
+
+## Load our libraries
+
+```{r global_options}
+# Set up global options for nice reports and keeping figures:
+knitr::opts_chunk$set(fig.width=14, fig.height=8, fig.align="center",
+                      warning=FALSE, message=FALSE)
+```
+
+Lets start by loading libraries
+
+```{r libraries}
+library(phyloseq)
+library(phangorn)
+library(ggplot2)
+
+nice_colors = c("#999999", "#E69F00", "#56B4E9","#e98756","#c08160","#5800e6", "#CDDC49", "#C475D3", 
+                "#E94B30", "#233F57", "#FEE659", "#A1CFDD", "#F4755E", "#D6F6F7","#EB6D58", "#6898BF")
+```
+
+## Load prior results
+
+```{r load_object}
+load(file=file.path("rdata_objects", "transformed_objects.RData"))
+```
+
+## Plotting a Phylogenetic Tree
+```{r plotTree,fig.height=20, fig.width=8, fig.align="center"}
+ps.class = tax_glom(ps.1, "Phylum")
+plot_tree(ps.class, label.tips="Phylum", color="Group", size='abundance') + scale_color_manual(values=nice_colors[-1]) +
+           ggtitle("Phylum Level, phylogeny") + facet_wrap(.~Temp, ncol=1)
+```
+
+
+
+```{r fig.width=6, fig.height=8}
+# Subset dataset by phylum
+ps.1ra_acidob = subset_taxa(ps.1ra, Phylum=="Actinobacteriota")
+plot_bar(ps.1ra_acidob, "Group", "Abundance", "Family", title= "plot_bar; Actinobacteriota-only")
+```
+
+
+```{r fig.width=6, fig.height=8}
+prop  = transform_sample_counts(ps.1, function(x) x / sum(x) )
+keepTaxa <- ((apply(otu_table(prop) >= 0.005,2,sum,na.rm=TRUE) > 2) | (apply(otu_table(prop) >= 0.05, 2, sum,na.rm=TRUE) > 0))
+table(keepTaxa)
+
+ps.1logRLE_trim <- prune_taxa(keepTaxa,ps.1logRLE)
+
+plot_heatmap(ps.1logRLE_trim, "PCoA", distance="bray", sample.label="Group", taxa.label="Genus", low="red", high="green", na.value="white")
+```
+
+
+# Cleanup
+
+Get next Rmd
+
+```{r get_next_rmd, eval=FALSE}
+download.file("https://raw.githubusercontent.com/ucdavis-bioinformatics-training/2021-May-Microbial-Community-Analysis/master/data_analysis/mca_part6.Rmd", "mca_part6.Rmd")
+```
+
+Record session information
+
+```{r session_info}
+sessionInfo()
+```
