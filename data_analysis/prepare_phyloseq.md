@@ -6,7 +6,7 @@ Open RStudio and create a new project, for more info on project see [this page](
 
 * File > New Project > New Directory > New Project (name the new directory, Ex. mca_analysis)
 
-We first need to make sure we have the necessary packages, phyloseq, ggplot2, gridExtra, gridR, ape, and edgeR are installed (if not install it), and then load each package to veryify they installed correctly
+We first need to make sure we have the necessary packages, and then load each package to veryify they installed correctly
 
 To install the packages, In the R console run the following commands
 
@@ -54,6 +54,10 @@ if (!any(rownames(installed.packages()) == "phangorn")){
 }
 library(phangorn); packageVersion("phangorn")
 
+if (!any(rownames(installed.packages()) == "tidyr")){
+  BiocManager::install("tidyr")
+}
+library(tidyr); packageVersion("tidyr")
 ```
 
 ### Download the template Markdown workshop document and open it
