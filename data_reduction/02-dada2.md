@@ -93,7 +93,7 @@ In this case our sample names are sufficient to produce our metadata. *Usually* 
 ### Produce and examine raw data quality profile plots:
 
     png(file.path("03-DADA2","fnSEs_quality.png"), width=2000, height=1000)
-    plotQualityProfile(fnSEs)
+    plotQualityProfile(fnSEs[1:3])
     dev.off()
 
 
@@ -112,6 +112,9 @@ We get right to denoising of our SE reads. DADA2 first generates an error model 
 
     derep <- derepFastq(fnSEs)
     errU <- learnErrors(derep, multithread=TRUE, nreads=50000)
+
+
+**For your dataset remove the nreads=5000 param**
 
 
 We can plot the error profiles and investigate.
