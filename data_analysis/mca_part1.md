@@ -219,7 +219,7 @@ Get next Rmd
 
 
 ```r
-download.file("https://raw.githubusercontent.com/ucdavis-bioinformatics-training/2021-May-Microbial-Community-Analysis/master/data_analysis/mca-part2.Rmd", "mca-part2.Rmd")
+download.file("https://raw.githubusercontent.com/ucdavis-bioinformatics-training/2021-May-Microbial-Community-Analysis/master/data_analysis/mca_part2.Rmd", "mca_part2.Rmd")
 ```
 
 Record session information

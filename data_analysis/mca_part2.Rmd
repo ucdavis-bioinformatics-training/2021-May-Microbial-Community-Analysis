@@ -1,0 +1,254 @@
+---
+title: "2021 Microbial Community Analysis Workshop - Part2"
+author: "UC Davis Bioinformatics Core"
+output:
+    html_document:
+      keep_md: TRUE
+---
+
+# Quality checks in our data
+
+## Load our libraries
+
+```{r global_options}
+# Set up global options for nice reports and keeping figures:
+knitr::opts_chunk$set(fig.width=14, fig.height=8, fig.align="center",
+                      warning=FALSE, message=FALSE)
+```
+
+Lets start by loading libraries
+
+```{r libraries}
+library(phyloseq)
+library(vegan)
+library(ggplot2)
+library(kableExtra)
+library(tidyr)
+
+nice_colors = c("#999999", "#E69F00", "#56B4E9","#e98756","#c08160","#5800e6", "#CDDC49", "#C475D3", 
+                "#E94B30", "#233F57", "#FEE659", "#A1CFDD", "#F4755E", "#D6F6F7","#EB6D58", "#6898BF")
+```
+
+## Load prior results
+
+```{r load_object}
+load(file=file.path("rdata_objects", "initial_rooted.Rdata"))
+```
+
+## Exploring reads, ASVs per sample
+
+Reads per sample, all samples
+ 
+```{r readsPerSampleAll, fig.height=7, fig.width=16, fig.align="center"}
+df = data.frame(ASVs=rowSums(otu_table(ps)>0), reads=sample_sums(ps), sample_data(ps))
+
+ggplot(df, aes(x=reads)) + geom_histogram(bins=50, color='black', fill='grey') + 
+  theme_bw() +  geom_vline(xintercept=10000, color= "red", linetype='dashed') +
+  labs(title="Histogram: Reads per Sample") + xlab("Read Count") + ylab("Sample Count")
+```
+
+Scatter Plot, ASVs vs reads
+```{r Reads_by_SampleGroup, fig.height=8, fig.width=16, fig.align="center"}
+ggplot(df, aes(x = Group, y = reads, color = ASVs)) +
+  geom_boxplot(color="black") + theme_bw() +
+  geom_jitter(width=.2, height=0)  + 
+  theme(axis.text.x = element_text(angle = 90)) +
+  geom_hline(yintercept=10000, color= "purple", linetype='dashed') +
+  geom_hline(yintercept=1000, color= "red", linetype='dashed') +
+  ggtitle("Reads sequenced by SampleGroup")
+```
+
+
+### Rarefaction curve plots
+
+Rarefaction curves show the number of [Amplicon Sequence Variants ](https://www.nature.com/articles/ismej2017119) detected as a function of sequencing depth. Optimally the curve will flatten out, indicating that most of the diversity in the population has been sampled. Depending on the type of experiment, it may not be necessary to fully sample the community in order to obtain useful information about the major changes or trends, especially for common community members.
+
+```{r rarefactionCurveV1}
+out = rarecurve(otu_table(ps), col=nice_colors, step=100 , lwd=2, ylab="ASVs", label=F,
+              main="Rarefaction Curve for all samples")
+```
+
+A ggplot rarefacion curve, borrowed form [here](http://r-sig-ecology.471788.n2.nabble.com/Rarefaction-curves-in-ggplot-td7580273.html)
+
+```{r rarefactionCurveV2.1}
+# We use the rarefaction curve data produce by vegan above
+names(out) = rownames(otu_table(ps))
+
+# Coerce data into "long" form.
+protox <- mapply(FUN = function(x, y) {
+  mydf <- as.data.frame(x)
+  colnames(mydf) <- "value"
+  mydf$SampleID <- y
+  mydf$subsample <- attr(x, "Subsample")
+  mydf
+}, x = out, y = as.list(names(out)), SIMPLIFY = FALSE)
+
+xy <- do.call(rbind, protox)
+rownames(xy) <- NULL  # pretty
+xy = data.frame(xy, 
+  sample_data(ps)[match(xy$SampleID, rownames(sample_data(ps))), ])
+# Plot Rarefaction curve
+ggplot(xy, aes(x = subsample, y = value, color = SampleID)) +
+  theme_bw() + 
+  scale_color_discrete(guide = FALSE) +  # turn legend on or off
+  geom_line() +
+  geom_vline(xintercept=10000, color= "red", linetype='dashed') + 
+  labs(title="Rarefaction curves") + xlab("Sequenced Reads") + ylab('ASVs Detected')
+
+# Plot Rarefaction curve
+ggplot(xy, aes(x = subsample, y = value, color = SampleID)) +
+  theme_bw() + 
+  scale_color_discrete(guide = FALSE) +  # turn legend on or off
+  geom_line() +
+  facet_wrap(~Group) + 
+  geom_vline(xintercept=10000, color= "red", linetype='dashed') + 
+  labs(title="Rarefaction curves by Group") + xlab("Sequenced Reads") + ylab('ASVs Detected')
+```
+
+```{r rarefactionCurveV2.2}
+# Plot Rarefaction curve, faceting by group
+ggplot(xy, aes(x = subsample, y = value, color = SampleID)) +
+  theme_bw() + 
+  scale_color_discrete(guide = FALSE) +  # turn legend on or off
+  geom_line() +
+  facet_wrap(~Group) + 
+  geom_vline(xintercept=10000, color= "red", linetype='dashed') + 
+  labs(title="Rarefaction curves by Group") + xlab("Sequenced Reads") + ylab('ASVs Detected')
+```
+
+The rarefaction curves suggest that there is a range of ~800-1200 ASV per sample in the study. Each group is also pretty similar
+
+
+* *Try faceting by the Temperature, do you see a different trend?*
+
+### Exploring the relationship between ASV and read count.
+
+```{r ASVs_vs_reads, echo=FALSE, fig.height=8, fig.width=9, fig.align="center"}
+# Scatter Plot, ASVs vs reads
+ggplot(df, aes(x = reads, y = ASVs)) +
+theme_bw() + 
+geom_point(aes(color=Group)) +
+ggtitle("ASVs by Reads Overlapped")
+```
+Scatter plot of ASVs by Reads colored by Group indicates that all samples mix well and are fairly well sampled.
+
+* *What about coloring by the other factors, Temp and Replicate? Do any new patterns emerge?*
+
+## Taxonomic Assignment QA/QC
+
+Plotting the amplicon length distribution
+
+```{r ampliconLengthDistribution, fig.height=6, fig.width=8, fig.align="center"}
+df = data.frame(names=names(refseq(ps)), ASV.Length = Biostrings::width(refseq(ps)))
+ggplot(df, aes(x=ASV.Length)) + geom_histogram(binwidth=1, color='black', fill='grey') + 
+  theme_bw() + labs(title="Histogram: Amplicon Lengths")
+```
+
+Are there trends in the fraction of **reads** that can be assigned to taxonomic level by experimental variables?
+
+```{r fractionReads_AssignedTaxonomy, fig.height=6, fig.width=8, fig.align="center"}
+readsPerSample = rowSums(otu_table(ps))
+fractionReadsAssigned = sapply(colnames(tax_table(ps)), function(x){
+  rowSums(otu_table(ps)[, !is.na(tax_table(ps))[,x]]) / readsPerSample
+})
+
+fractionReadsAssigned = data.frame(SampleID = rownames(fractionReadsAssigned), fractionReadsAssigned)
+fractionReadsAssigned.L = pivot_longer(fractionReadsAssigned, 
+    cols=colnames(tax_table(ps)), names_to="taxlevel", values_to="fractionReadsAssigned")
+fractionReadsAssigned.L = data.frame(fractionReadsAssigned.L, sample_data(ps)[fractionReadsAssigned.L$SampleID,])
+
+fractionReadsAssigned.L$taxlevelf = factor(fractionReadsAssigned.L$taxlevel, levels=c("Kingdom","Phylum","Class","Order","Family","Genus","Species"))
+
+# Boxplot, fraction assigned by SampleType
+ggplot(fractionReadsAssigned.L, aes(y = fractionReadsAssigned, x = taxlevelf, fill=Group, color=Replicate)) +
+  theme_bw() +
+  geom_boxplot(color='black', outlier.shape=NA) +  
+  ggtitle("Fraction of reads identified by taxonomic level") +
+  geom_point(position=position_jitterdodge(jitter.width=0, jitter.height=0), size=.5)
+```
+
+Are there trends in the fraction of **ASVs** that can be assigned to taxonomic level by experimental variables?
+
+```{r fractionASVs_AssignedTaxonomy, echo=FALSE, fig.height=6, fig.width=8, fig.align="center"}
+ASVsPerSample = rowSums(otu_table(ps)>0)
+fractionASVsAssigned = sapply(colnames(tax_table(ps)), function(x){
+  rowSums(otu_table(ps)[, !is.na(tax_table(ps))[,x]]>0) / ASVsPerSample
+})
+
+fractionASVsAssigned = data.frame(SampleID = rownames(fractionASVsAssigned), fractionASVsAssigned)
+fractionASVsAssigned.L = pivot_longer(fractionASVsAssigned, cols=colnames(tax_table(ps)), 
+    names_to="taxlevel", values_to="fractionASVsAssigned")
+fractionASVsAssigned.L = data.frame(fractionASVsAssigned.L, sample_data(ps)[fractionASVsAssigned.L$SampleID,])
+
+fractionASVsAssigned.L$taxlevelf = factor(fractionASVsAssigned.L$taxlevel, levels=c("Kingdom","Phylum","Class","Order","Family","Genus","Species"))
+
+# Boxplot, fraction assigned by SampleType
+ggplot(fractionASVsAssigned.L, aes(y = fractionASVsAssigned, x = taxlevelf, fill=Group, color=Replicate)) +
+  theme_bw() +
+  geom_boxplot(color='black', outlier.shape=NA) +  
+  ggtitle("Fraction of ASVs identified by taxonomic level") +
+  geom_point(position=position_jitterdodge(jitter.width=0, jitter.height=0), size=.5)
+```
+
+
+
+Genus level:
+
+The statistics in this plot are calculated by merging taxa at the "Genus" rank with the tax_glom() function. This strategy works by summing reads from all ASVs with the same assignment at the specified taxonomic level. The ASV with the highest read count is selected as the representative for the agglomerated set. ASV with NA are removed.
+
+```{r fractionGenera_vs_SampleType, echo=FALSE, fig.height=6, fig.width=8, fig.align="center"}
+ps.Genus = tax_glom(ps, taxrank="Genus")
+readsPerSample = rowSums(otu_table(ps))
+readsPerSample.genus = sample_sums(ps.Genus)
+
+df = cbind(readsPerSample, readsPerSample.genus, fraction=readsPerSample.genus/readsPerSample,
+           genusPerSample=rowSums(otu_table(ps.Genus)>0), sample_data(ps))
+
+# Boxplot, fraction assigned by SampleType
+ggplot(df, aes(y = fraction, x = Group)) +
+  theme_bw() +
+  geom_boxplot(color='black') +  
+  ggtitle("Fraction of reads identified to Genus by SampleType") +
+  geom_jitter(aes(color=Group), width=.1, height=0)
+```
+
+
+Top 20 most **abundant** ASVs and their taxonomic assignment:
+
+```{r p004.2.1_topAbundant, echo=FALSE, fig.height=6, fig.width=6, fig.align="center"}
+prevalenceDF = data.frame(Prevalence = colSums(otu_table(ps) > 0 ),
+                          TotalAbundance = colSums(otu_table(ps)),
+                          tax_table(ps)
+                          )
+
+idxAbundance = order(prevalenceDF$TotalAbundance, decreasing=T)
+idxPrevalence = order(prevalenceDF$Prevalence, decreasing=T)
+
+kable(prevalenceDF[idxAbundance, ][1:20, ])  %>% 
+  kable_styling("striped", full_width = F) %>%   row_spec(0, angle = 0)
+```
+
+Top 20 most **prevalent** ASVs and their taxonomic assignment:
+
+```{r p004.2.1_topPrevalent, echo=FALSE, fig.height=8, fig.width=9, fig.align="center"}
+kable(prevalenceDF[idxPrevalence, ][1:20, ])  %>% 
+  kable_styling("striped", full_width = F) %>%   row_spec(0, angle = 0)
+
+```
+
+
+# Cleanup
+
+We haven't edited our object yet, so no need to save it.
+
+Get next Rmd
+
+```{r get_next_rmd, eval=FALSE}
+download.file("https://raw.githubusercontent.com/ucdavis-bioinformatics-training/2021-May-Microbial-Community-Analysis/master/data_analysis/mca_part3.Rmd", "mca_part3.Rmd")
+```
+
+Record session information
+
+```{r session_info}
+sessionInfo()
+```

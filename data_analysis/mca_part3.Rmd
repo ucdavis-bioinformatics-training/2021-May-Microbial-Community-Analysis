@@ -1,0 +1,55 @@
+---
+title: "2021 Microbial Community Analysis Workshop - Part3"
+author: "UC Davis Bioinformatics Core"
+output:
+    html_document:
+      keep_md: TRUE
+---
+
+# main title
+
+## Load our libraries
+
+```{r global_options}
+# Set up global options for nice reports and keeping figures:
+knitr::opts_chunk$set(fig.width=14, fig.height=8, fig.align="center",
+                      warning=FALSE, message=FALSE)
+```
+
+Lets start by loading libraries
+
+```{r libraries}
+library(phyloseq)
+library(phangorn)
+library(ggplot2)
+
+nice_colors = c("#999999", "#E69F00", "#56B4E9","#e98756","#c08160","#5800e6", "#CDDC49", "#C475D3", 
+                "#E94B30", "#233F57", "#FEE659", "#A1CFDD", "#F4755E", "#D6F6F7","#EB6D58", "#6898BF")
+```
+
+## Load prior results
+
+```{r load_object}
+load(file=file.path("rdata_objects", "initial_rooted.Rdata"))
+```
+
+# Cleanup
+
+Save object
+
+```{r save_object}
+dir.create("rdata_objects", showWarnings = FALSE)
+save(ps, file=file.path("rdata_objects", ""))
+```
+
+Get next Rmd
+
+```{r get_next_rmd, eval=FALSE}
+download.file("https://raw.githubusercontent.com/ucdavis-bioinformatics-training/2021-May-Microbial-Community-Analysis/master/data_analysis/mca_part4.Rmd", "mca_part4.Rmd")
+```
+
+Record session information
+
+```{r session_info}
+sessionInfo()
+```
