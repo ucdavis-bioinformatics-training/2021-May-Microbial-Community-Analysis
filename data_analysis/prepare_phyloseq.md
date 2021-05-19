@@ -77,7 +77,7 @@ download.file("https://raw.githubusercontent.com/ucdavis-bioinformatics-training
 
 
 ```r
-download.file("https://raw.githubusercontent.com/ucdavis-bioinformatics-training/2021-May-Microbial-Community-Analysis/master/data/phyloseq_nochim_silva.RData", "phyloseq_nochim_silva2.RData")
+download.file("https://raw.githubusercontent.com/ucdavis-bioinformatics-training/2021-May-Microbial-Community-Analysis/master/data/phyloseq_nochim_silva.RData", "phyloseq_nochim_silva.RData")
 ```
 
 ### Edit the file YAML portion
