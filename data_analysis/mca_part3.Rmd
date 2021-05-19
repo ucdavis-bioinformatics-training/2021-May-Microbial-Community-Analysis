@@ -6,7 +6,7 @@ output:
       keep_md: TRUE
 ---
 
-# main title
+# Filtering taxa and samples
 
 ## Load our libraries
 
@@ -22,6 +22,7 @@ Lets start by loading libraries
 library(phyloseq)
 library(phangorn)
 library(ggplot2)
+library(gridExtra)
 
 nice_colors = c("#999999", "#E69F00", "#56B4E9","#e98756","#c08160","#5800e6", "#CDDC49", "#C475D3", 
                 "#E94B30", "#233F57", "#FEE659", "#A1CFDD", "#F4755E", "#D6F6F7","#EB6D58", "#6898BF")
@@ -33,13 +34,125 @@ nice_colors = c("#999999", "#E69F00", "#56B4E9","#e98756","#c08160","#5800e6", "
 load(file=file.path("rdata_objects", "initial_rooted.Rdata"))
 ```
 
+
+## Now lets filter out samples (outliers and low performing samples)
+
+Some simple ordination looking for 'outlier' samples, first we variance stabilize the data with a log transform, the perform MDS using bray's distances
+
+```{r ordplot,  fig.width=8, fig.height=8, fig.align="center"}
+logt  = transform_sample_counts(ps, function(x) log(1 + x) )
+out.mds.logt <- ordinate(logt, method = "MDS", distance = "bray")
+evals <- out.mds.logt$values$Eigenvalues
+plot_ordination(logt, out.mds.logt, type = "samples",
+                color = "Group", shape = "Temp") + labs(col = "Group") +
+                coord_fixed(sqrt(evals[2] / evals[1]))
+```
+
+Show taxa proportions per sample (quickplot)
+```{r taxa_hist, fig.width=6, fig.height=8}
+grid.arrange(nrow = 2,
+qplot(as(otu_table(logt),"matrix")[which.min(sample_sums(logt)),], geom = "histogram", bins=50) +
+  xlab("Relative abundance"),
+
+qplot(as(otu_table(logt),"matrix")[which.max(sample_sums(logt)),], geom = "histogram", bins=50) +
+  xlab("Relative abundance")
+)
+```
+
+Nothing so far seems to stand out and our read counts ASV look good from our prior QA, so we won't remove any samples in this experiment.
+
+However if we wanted to prune samples, say removing all <10K reads, the code below would do so.
+```{r prune_samples}
+ps.pruned <- prune_samples(sample_sums(ps)>=10000, ps)
+ps.pruned
+```
+
+* *So how many samples were pruned?*
+
+## Taxa Filtering
+
+## Whole phylum filtering
+
+Now lets investigate low prevelance/abundance phylum and subset them out.
+
+Lets generate a prevelance table (number of samples each taxa occurs in) for each taxa.
+```{r regen_prevalencetable}
+prevalenceDF = data.frame(Prevalence = colSums(otu_table(ps) > 0 ),
+                          TotalAbundance = colSums(otu_table(ps)),
+                          tax_table(ps)
+                          )
+
+idxAbundance = order(prevalenceDF$TotalAbundance, decreasing=T)
+idxPrevalence = order(prevalenceDF$Prevalence, decreasing=T)
+```
+
+```{r summarize_by_phylum}
+summary_prevalence <- plyr::ddply(prevalenceDF, "Phylum", function(df1){
+  data.frame(mean_prevalence=mean(df1$Prevalence),totalAbundance=sum(df1$TotalAbundance,na.rm = T),stringsAsFactors = F)
+})
+summary_prevalence[order(summary_prevalence$totalAbundance, decreasing = FALSE),]
+```
+
+Using the table above, determine the phyla to filter, filtering 0.1% experiment wide abundance.
+```{r}
+sum(summary_prevalence$totalAbundance)*0.001
+table(summary_prevalence$totalAbundance/sum(summary_prevalence$totalAbundance) >= 0.001)
+keepPhyla <- summary_prevalence$Phylum[summary_prevalence$totalAbundance/sum(summary_prevalence$totalAbundance) >= 0.001]
+
+ps.1 = subset_taxa(ps, Phylum %in% keepPhyla)
+ps.1
+
+summary_prevalence <- summary_prevalence[summary_prevalence$Phylum %in% keepPhyla,]
+summary_prevalence[order(summary_prevalence$totalAbundance, decreasing = FALSE),]
+```
+
+### Individual Taxa Filtering
+
+Subset to the remaining phyla by prevelance.
+```{r fig.width=12, fig.height=12}
+prevalenceDF1 = subset(prevalenceDF, Phylum %in% get_taxa_unique(ps.1, taxonomic.rank = "Phylum"))
+
+ggplot(prevalenceDF1, aes(TotalAbundance,Prevalence / nsamples(ps.1),color=Phylum)) +
+  # Include a guess for filtering intercept
+  geom_hline(yintercept = 0.25, alpha = 0.5, linetype = 2) + geom_point(size = 2, alpha = 0.7) +
+  scale_x_log10() +  xlab("Total Abundance") + ylab("Prevalence [Frac. Samples]") +
+  facet_wrap(~Phylum) + theme(legend.position="none")
+```
+Sometimes you see a clear break, however we aren't seeing one here. In this case I'm mostly interested in those organisms consistently present in the dataset, so I'm removing all taxa present in less than 25% of samples.
+
+```{r prev_prune}
+#  Define prevalence threshold as 10% of total samples ~ set of replicates
+prevalenceThreshold = 0.25 * nsamples(ps.1)
+prevalenceThreshold
+
+# Execute prevalence filter, using `prune_taxa()` function
+keepTaxa = rownames(prevalenceDF1)[(prevalenceDF1$Prevalence >= prevalenceThreshold)]
+length(keepTaxa)
+ps.1 = prune_taxa(keepTaxa, ps.1)
+ps.1
+```
+
+Agglomerate taxa at the Genus level (combine all with the same name) removing all asv without genus level assignment.
+
+```{r agglom}
+length(get_taxa_unique(ps.1, taxonomic.rank = "Family"))
+ps.1 = tax_glom(ps.1, "Family", NArm = TRUE)
+ps.1 = tax_glom(ps.1, "Genus", NArm = FALSE)
+ps.1
+
+## out of curiosity how many "reads" does this leave us at???
+sum(colSums(otu_table(ps.1)))
+```
+
+* *So what percentage is that? from the original dataset?*
+
 # Cleanup
 
 Save object
 
 ```{r save_object}
 dir.create("rdata_objects", showWarnings = FALSE)
-save(ps, file=file.path("rdata_objects", ""))
+save(list=c("ps","ps.1"), file=file.path("rdata_objects", "filtered_phyloseq.RData"))
 ```
 
 Get next Rmd
