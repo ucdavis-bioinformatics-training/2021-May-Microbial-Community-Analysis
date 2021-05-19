@@ -53,6 +53,11 @@ These plots are generated on untrimmed datasets as indicated:
 >     trim the data later on if needed, just not before using this
 >     function.
 
+* [Rarefaction, Alpha Diversity, and Statistics](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6819366/)
+* [Estimating the Number of Species in Microbial Diversity Studies](https://www.annualreviews.org/doi/abs/10.1146/annurev-statistics-022513-115654)
+* And see [this](http://evolution.unibas.ch/walser/bacteria_community_analysis/2015-02-10_MBM_tutorial_combined.pdf) for a more detailed review of the large variety of diversity measures.
+* [Deciphering Diversity Indices for a Better Understanding of Microbial Communities](http://www.jmb.or.kr/submission/Journal/027/JMB027-12-02_FDOC_2.pdf)
+
 Observed Richness: The number of ASVs detected per sample:
 
 
