@@ -48,7 +48,7 @@ navigation:
 
   - heading: Data Analysis
   - title: Prepare Analysis
-  - url: data_analysis/prepare_phyloaseq
+    url: data_analysis/prepare_phyloseq
 
   - heading: ETC
   - title: Closing thoughts

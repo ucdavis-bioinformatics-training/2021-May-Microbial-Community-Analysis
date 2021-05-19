@@ -289,11 +289,10 @@ To produce a phylogenetic tree we need to:
 * Compute the likelihood of a tree given a sequence alignment and a model
 * update and optimize its parameters.
 
-
+First lets load the library.
 
     library(DECIPHER); packageVersion("DECIPHER")
     library(phangorn); packageVersion("phangorn")
-
 
     ASVs.nochim = DNAStringSet(colnames(seqtab.nochim))
     names(ASVs.nochim) = paste0("ASV", 1:ncol(seqtab.nochim))
