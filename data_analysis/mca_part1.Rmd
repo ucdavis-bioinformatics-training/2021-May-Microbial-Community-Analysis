@@ -1,0 +1,93 @@
+---
+title: "2021 Microbial Community Analysis Workshop - Part1"
+author: "UC Davis Bioinformatics Core"
+output:
+    html_document:
+      keep_md: TRUE
+---
+
+# Reading in the experiment data and exploring the Phyloseq object
+
+The phyloseq package has become a convenient way a managing micobial community data, filtering and visualizing data, performing analysis such as ordination. Along with the standard R environment and packages vegan and vegetarian you can perform virtually any analysis. Today we will
+
+1. Load phyloseq object
+2. Perform some QA/QC
+3. Filter Data
+5. Graphical Summaries
+6. Ordination
+7. Differential Abundances
+
+## Load our libraries
+
+```{r global_options}
+# Set up global options for nice reports and keeping figures:
+knitr::opts_chunk$set(fig.width=14, fig.height=8, fig.align="center",
+                      warning=FALSE, message=FALSE)
+```
+
+Lets start by loading libraries
+
+```{r libraries}
+library(phyloseq)
+library(phangorn)
+library(ggplot2)
+
+nice_colors = c("#999999", "#E69F00", "#56B4E9","#e98756","#c08160","#5800e6", "#CDDC49", "#C475D3", 
+                "#E94B30", "#233F57", "#FEE659", "#A1CFDD", "#F4755E", "#D6F6F7","#EB6D58", "#6898BF")
+```
+
+## Read in the dataset, 
+
+Lets first read in the Phyloseq object, this is the full dataset 197 generated from the same pipeline used in the data reduction section.
+
+```{r readphyloseq}
+load(file="phyloseq_nochim_silva.RData")
+ls()
+
+# set the data set used for analysis
+ps = ps.silva.nochim
+
+head(otu_table(ps))[,1:10]
+head(sample_data(ps))
+head(tax_table(ps))
+head(refseq(ps))
+head(rank_names(ps))
+sample_variables(ps)
+```
+
+### Root the phylogenetic tree
+
+Some analysis require the phylogenetic tree to be rooted. We use phanghorn root command to set our root.
+
+```{r roottree}
+set.seed(1)
+is.rooted(phy_tree(ps))
+phy_tree(ps) <- root(phy_tree(ps), sample(taxa_names(ps), 1), resolve.root = TRUE)
+is.rooted(phy_tree(ps))
+```
+
+### The Phyloseq Object
+
+A lot of information is in this object, spend somem time to get to know it.
+
+* *Explore the sample data, how many Groups do we have? Temps? patterns of replicate?*
+* *Using the `@` operator to access class objects are there any other info in the ps object not already looked at/*
+* * Use `?"phyloseq-class"` to get information on the class and object.
+
+```{r object}
+ps
+```
+
+## Drawing our first plot
+```{r firstplot, fig.height=7, fig.width=16, fig.align="center"}
+ps
+plot_bar(ps, fill = "Phylum") + theme(legend.position="bottom" ) +  scale_fill_manual(values = rainbow(length(unique(tax_table(ps)[,"Phylum"]))))
+```
+
+```{r get_next_rmd, eval=FALSE}
+download.file("https://raw.githubusercontent.com/ucdavis-bioinformatics-training/2021-May-Microbial-Community-Analysis/master/data_analysis/mca-part2.Rmd", "mca-part2.Rmd")
+```
+
+```{r session_info}
+sessionInfo()
+```
