@@ -50,7 +50,7 @@ navigation:
   - title: Prepare Analysis
     url: data_analysis/prepare_phyloseq
   - title: MCA Part 1
-    url: data_analysis/mca-part1
+    url: data_analysis/mca_part1
 
   - heading: ETC
   - title: Closing thoughts

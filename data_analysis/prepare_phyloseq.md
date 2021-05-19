@@ -61,7 +61,7 @@ library(phangorn); packageVersion("phangorn")
 In the R console run the following command
 
 ```r
-download.file("https://raw.githubusercontent.com/ucdavis-bioinformatics-training/2021-May-Microbial-Community-Analysis/master/data_analysis/mca-part1.Rmd", "mca-part1.Rmd")
+download.file("https://raw.githubusercontent.com/ucdavis-bioinformatics-training/2021-May-Microbial-Community-Analysis/master/data_analysis/mca_part1.Rmd", "mca_part1.Rmd")
 ```
 
 ### Download the data file for the workshop document and preview/open it
